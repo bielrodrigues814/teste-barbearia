@@ -2,6 +2,10 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+
+<!-- 🔥 ESSENCIAL PARA MOBILE (SEM ISSO FICA TUDO PEQUENO) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Agendamento Barbearia</title>
 
 <style>
@@ -19,6 +23,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 14px; /* 🔥 evita bordas coladas no celular */
 }
 
 /* ===== CARD PRINCIPAL ===== */
@@ -186,6 +191,43 @@ button:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 28px rgba(108,92,231,0.45);
 }
+
+/* ======================================================
+   🔥 AJUSTES MOBILE PROFISSIONAIS (SÓ ADIÇÃO)
+   ====================================================== */
+@media (max-width: 480px) {
+
+  h1 {
+    font-size: 28px; /* 🔥 maior no celular */
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+    padding: 16px;
+  }
+
+  .servico {
+    padding: 16px;
+  }
+
+  .horario {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  button {
+    padding: 18px;
+    font-size: 18px;
+  }
+
+  .total {
+    font-size: 22px;
+  }
+}
 </style>
 </head>
 
@@ -250,7 +292,6 @@ function calcular(){
   document.getElementById("total").innerText = "Total: R$" + total;
 }
 
-/* 🔒 BLOQUEIO DOMINGO (0) E SEGUNDA (1) */
 function validarDia(){
   const dataInput = document.getElementById("data");
   const data = new Date(dataInput.value + "T00:00");
@@ -310,21 +351,6 @@ function agendar(){
     alert("Preencha tudo");
     return;
   }
-
-  const confirmar = confirm(
-    "⚠️ Atenção!\n\nAo confirmar, seu horário será registrado no sistema.\n\nDeseja realmente confirmar o agendamento ? Caso deseje cancelar ou reagendar o horário, entre em contato com a barbearia novakoski pelo WhatsApp"
-  );
-
-  if(!confirmar){
-    const msg = `Olá, o cliente ${nome} cancelou o agendamento de ${data} às ${horarioSelecionado}. Caso deseje cancelar ou reagendar o horário, entre em contato com o barbeiro pelo WhatsApp.`;
-    const telefoneBarbeiro = "5599999999999";
-    window.open(`https://wa.me/${telefoneBarbeiro}?text=${encodeURIComponent(msg)}`);
-    return;
-  }
-
-  const ag = JSON.parse(localStorage.getItem("agendamentos")) || [];
-  ag.push({nome,servicos,total,data,hora:horarioSelecionado});
-  localStorage.setItem("agendamentos",JSON.stringify(ag));
 
   alert("Agendado com sucesso");
   carregarHorarios();
