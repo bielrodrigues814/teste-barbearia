@@ -3,196 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda do Barbeiro</title>
+<title>Agendamento Barbearia</title>
 
 <style>
 * { box-sizing: border-box; }
 
 body {
-  margin: 0;
   min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
   font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(135deg, #43cea2, #185a9d);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-/* LOGO */
-body::before {
-  content: "";
-  position: fixed;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 120px;
-  background-image: url("https://static.vecteezy.com/system/resources/previews/044/812/126/non_2x/classic-barber-shop-logo-with-vintage-style-on-transparent-background-png.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  opacity: .9;
-  z-index: 0;
-}
-
-.greeting {
-  position: fixed;
-  top: 150px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24px;
-  font-weight: 700;
-  color: #eafff7;
-  display: flex;
-  gap: 2px;
-}
-
-.greeting span {
-  animation: greetIn .6s forwards, pulse 2.2s infinite;
-  opacity: 0;
-}
-
-@keyframes greetIn {
-  from { transform: translateY(12px) scale(.8); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
-}
-@keyframes pulse {
-  0%,100%{transform:scale(1)}50%{transform:scale(1.06)}
+  padding: 14px;
 }
 
 .container {
-  margin-top: 230px;
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
   background: #fff;
-  padding: 28px;
-  border-radius: 22px;
-  box-shadow: 0 20px 45px rgba(0,0,0,.25);
-  z-index: 2;
+  padding: 30px 28px;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
-h1 { text-align:center;font-size:26px;margin-bottom:10px; }
-.data-atual { text-align:center;font-weight:bold;color:#1abc9c;margin-bottom:18px; }
-
-input[type="date"] {
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  font-size:16px;
-  margin-bottom:22px;
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 26px;
 }
 
-.agendamento {
-  background: linear-gradient(135deg,#f7f9fb,#eef3f7);
-  padding:18px;
-  border-radius:16px;
-  margin-bottom:16px;
-  border-left:6px solid #1abc9c;
+label {
+  display: block;
+  margin-top: 18px;
+  font-weight: 600;
 }
 
-.hora { font-size:20px;font-weight:bold; }
-.cliente,.servicos { font-size:16px;margin-top:6px; }
-.total { font-size:17px;font-weight:bold;color:#27ae60;margin-top:8px; }
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #dfe6e9;
+  margin-top: 6px;
+}
+
+.servico {
+  background: #f7f9fc;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.total {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #00b894;
+  text-align: right;
+}
+
+.horarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.horario {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.livre { background: #00b894; color: #fff; }
+.ocupado { background: #d63031; color: #fff; opacity: .6; cursor: not-allowed; }
+.selecionado { background: #fdcb6e; color: #000; }
 
 button {
-  width:100%;
-  padding:14px;
-  margin-top:14px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(135deg,#ff5f6d,#ffc371);
-  color:#fff;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.footer-brand {
-  margin:22px 0;
-  font-size:22px;
-  font-weight:700;
-  letter-spacing:2px;
-  color:#eafff7;
-}
-
-.footer-brand span { animation: float 2.4s infinite; display:inline-block; }
-
-@keyframes float {
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-6px)}
+  width: 100%;
+  margin-top: 28px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #6c5ce7;
+  color: #fff;
+  font-size: 17px;
+  font-weight: bold;
+  border: none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="greeting" id="greeting"></div>
-
 <div class="container">
-  <h1>Agenda do Barbeiro</h1>
-  <div class="data-atual" id="dataTexto"></div>
-  <input type="date" id="data">
-  <div id="lista"></div>
+<h1>BARBEARIA NOVAKOSKI</h1>
+
+<label>Nome</label>
+<input id="nome">
+
+<label>Serviços</label>
+<div class="servico"><label><input type="checkbox" data-preco="30" value="Corte"> Corte</label><span>R$30</span></div>
+<div class="servico"><label><input type="checkbox" data-preco="80" value="Luzes"> Luzes</label><span>R$80</span></div>
+<div class="servico"><label><input type="checkbox" data-preco="15" value="Pezinho"> Pezinho</label><span>R$15</span></div>
+<div class="servico"><label><input type="checkbox" data-preco="40" value="Pigmentação"> Pigmentação</label><span>R$40</span></div>
+<div class="servico"><label><input type="checkbox" data-preco="20" value="Sobrancelha"> Sobrancelha</label><span>R$20</span></div>
+
+<div class="total" id="total">Total: R$0</div>
+
+<label>Data</label>
+<input type="date" id="data">
+
+<label>Horário</label>
+<div class="horarios" id="horarios"></div>
+
+<button onclick="agendar()">Agendar</button>
 </div>
 
-<div class="footer-brand" id="brand"></div>
-
 <script>
-/* 🔐 GARANTIA GITHUB PAGES */
-if(!localStorage.getItem("agendamentos")){
-  localStorage.setItem("agendamentos", JSON.stringify([]));
+const horariosFixos = ["09:00","10:00","11:00","14:00","15:00","16:00"];
+let horarioSelecionado = null;
+
+document.querySelectorAll("input[type=checkbox]").forEach(c => c.onchange = calcular);
+document.getElementById("data").addEventListener("change", validarDia);
+
+function calcular() {
+  let total = 0;
+  document.querySelectorAll("input[type=checkbox]").forEach(c => {
+    if (c.checked) total += Number(c.dataset.preco);
+  });
+  document.getElementById("total").innerText = "Total: R$" + total;
 }
 
-/* SAUDAÇÃO */
-const greetingText="Olá, Paulo 👋";
-greeting.innerHTML=greetingText.split("").map((l,i)=>`<span style="animation-delay:${i*.06}s">${l===" "?"&nbsp;":l}</span>`).join("");
+function validarDia() {
+  const data = document.getElementById("data").value;
+  if (!data) return;
 
-/* MARCA */
-const brandText="BARBEARIA NOVÁKOSKI";
-brand.innerHTML=brandText.split("").map(l=>`<span>${l===" "?"&nbsp;":l}</span>`).join("");
-
-const dataInput=document.getElementById("data");
-const lista=document.getElementById("lista");
-const dataTexto=document.getElementById("dataTexto");
-
-let hoje=new Date();
-while(hoje.getDay()==0||hoje.getDay()==1)hoje.setDate(hoje.getDate()+1);
-dataInput.value=hoje.toISOString().split("T")[0];
-
-carregarAgenda();
-dataInput.addEventListener("change",carregarAgenda);
-
-function carregarAgenda(){
-  lista.innerHTML="";
-  const ag=JSON.parse(localStorage.getItem("agendamentos"))||[];
-  const dia=ag.filter(a=>a.data===dataInput.value);
-
-  dataTexto.innerText="Data: "+dataInput.value.split("-").reverse().join("/");
-
-  if(!dia.length){
-    lista.innerHTML="<p>Nenhum agendamento para este dia</p>";
+  const dia = new Date(data + "T00:00").getDay();
+  if (dia === 0 || dia === 1) {
+    alert("Não funciona domingo e segunda-feira.");
+    document.getElementById("data").value = "";
+    document.getElementById("horarios").innerHTML = "";
     return;
   }
+  carregarHorarios();
+}
 
-  dia.forEach(a=>{
-    const div=document.createElement("div");
-    div.className="agendamento";
-    div.innerHTML=`
-      <div class="hora">⏰ ${a.hora}</div>
-      <div class="cliente">👤 ${a.nome}</div>
-      <div class="servicos">✂️ ${a.servicos.join(", ")}</div>
-      <div class="total">💰 R$ ${a.total}</div>
-      <button onclick="excluirAgendamento('${a.data}','${a.hora}')">Excluir</button>`;
-    lista.appendChild(div);
+function carregarHorarios() {
+  const div = document.getElementById("horarios");
+  div.innerHTML = "";
+  horarioSelecionado = null;
+
+  const data = document.getElementById("data").value;
+  const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+  horariosFixos.forEach(h => {
+    const ocupado = agendamentos.some(a => a.data === data && a.hora === h);
+    const btn = document.createElement("button");
+    btn.textContent = h;
+    btn.className = "horario " + (ocupado ? "ocupado" : "livre");
+
+    if (!ocupado) {
+      btn.onclick = () => selecionar(btn, h);
+    }
+
+    div.appendChild(btn);
   });
 }
 
-function excluirAgendamento(data,hora){
-  let ag=JSON.parse(localStorage.getItem("agendamentos"))||[];
-  ag=ag.filter(a=>!(a.data===data&&a.hora===hora));
-  localStorage.setItem("agendamentos",JSON.stringify(ag));
-  carregarAgenda();
+function selecionar(btn, h) {
+  document.querySelectorAll(".horario").forEach(b => b.classList.remove("selecionado"));
+  btn.classList.add("selecionado");
+  horarioSelecionado = h;
+}
+
+function agendar() {
+  const nome = document.getElementById("nome").value.trim();
+  const data = document.getElementById("data").value;
+
+  if (!nome || !data || !horarioSelecionado) {
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+  const conflito = agendamentos.some(a => a.data === data && a.hora === horarioSelecionado);
+  if (conflito) {
+    alert("Horário já ocupado!");
+    carregarHorarios();
+    return;
+  }
+
+  agendamentos.push({
+    nome,
+    data,
+    hora: horarioSelecionado,
+    criadoEm: new Date().toISOString()
+  });
+
+  localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+
+  alert("Agendamento confirmado!");
+  carregarHorarios();
 }
 </script>
 

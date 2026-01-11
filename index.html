@@ -2,9 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Agendamento Barbearia</title>
 
 <style>
@@ -66,16 +64,14 @@ input {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
-}
-
-input[type="checkbox"] {
-  accent-color: #6c5ce7;
+  border: 1px solid #ecf0f1;
 }
 
 .total {
   margin-top: 20px;
   font-size: 20px;
   font-weight: 700;
+  color: #00b894;
   text-align: right;
 }
 
@@ -88,14 +84,13 @@ input[type="checkbox"] {
 
 .horario {
   padding: 14px;
-  border: none;
   border-radius: 12px;
+  border: none;
   font-weight: bold;
-  cursor: pointer;
 }
 
 .livre { background: #00b894; color: #fff; }
-.ocupado { background: #d63031; color: #fff; opacity: .6; cursor: not-allowed; }
+.ocupado { background: #d63031; color: #fff; opacity: .6; }
 .selecionado { background: #fdcb6e; color: #000; }
 
 button {
@@ -108,7 +103,6 @@ button {
   font-size: 17px;
   font-weight: bold;
   border: none;
-  cursor: pointer;
 }
 </style>
 </head>
@@ -147,7 +141,7 @@ let horarioSelecionado = null;
 document.querySelectorAll("input[type=checkbox]").forEach(c => c.onchange = calcular);
 document.getElementById("data").onchange = validarDia;
 
-function calcular(){
+function calcular() {
   let total = 0;
   document.querySelectorAll("input[type=checkbox]").forEach(c=>{
     if(c.checked) total += Number(c.dataset.preco);
@@ -155,11 +149,21 @@ function calcular(){
   document.getElementById("total").innerText = "Total: R$" + total;
 }
 
-function validarDia(){
+function validarDia() {
+  const dataInput = document.getElementById("data");
+  const data = new Date(dataInput.value + "T00:00");
+  const dia = data.getDay();
+
+  if(dia === 0 || dia === 1) {
+    alert("Não funciona domingo e segunda.");
+    dataInput.value = "";
+    document.getElementById("horarios").innerHTML = "";
+    return;
+  }
   carregarHorarios();
 }
 
-function carregarHorarios(){
+function carregarHorarios() {
   const div = document.getElementById("horarios");
   div.innerHTML = "";
   horarioSelecionado = null;
@@ -167,37 +171,27 @@ function carregarHorarios(){
   const data = document.getElementById("data").value;
   const ag = JSON.parse(localStorage.getItem("agendamentos")) || [];
 
-  horariosFixos.forEach(h=>{
+  horariosFixos.forEach(h => {
     const ocupado = ag.some(a => a.data === data && a.hora === h);
     const b = document.createElement("button");
     b.innerText = h;
     b.className = "horario " + (ocupado ? "ocupado" : "livre");
-    if(!ocupado) b.onclick = () => selecionar(b,h);
+    if(!ocupado) b.onclick = () => selecionar(b, h);
     div.appendChild(b);
   });
 }
 
-function selecionar(botao,h){
-  document.querySelectorAll(".horario").forEach(b=>b.classList.remove("selecionado"));
-  botao.classList.add("selecionado");
+function selecionar(btn, h) {
+  document.querySelectorAll(".horario").forEach(b => b.classList.remove("selecionado"));
+  btn.classList.add("selecionado");
   horarioSelecionado = h;
 }
 
-function agendar(){
+function agendar() {
   const nome = document.getElementById("nome").value;
   const data = document.getElementById("data").value;
 
-  const servicos = [];
-  let total = 0;
-
-  document.querySelectorAll("input[type=checkbox]").forEach(c=>{
-    if(c.checked){
-      servicos.push(c.value);
-      total += Number(c.dataset.preco);
-    }
-  });
-
-  if(!nome || !data || !horarioSelecionado || servicos.length===0){
+  if(!nome || !data || !horarioSelecionado) {
     alert("Preencha tudo");
     return;
   }
@@ -207,14 +201,12 @@ function agendar(){
   ag.push({
     nome,
     data,
-    hora: horarioSelecionado,
-    servicos,
-    total
+    hora: horarioSelecionado
   });
 
   localStorage.setItem("agendamentos", JSON.stringify(ag));
 
-  alert("Agendado com sucesso");
+  alert("Agendamento salvo com sucesso!");
   carregarHorarios();
 }
 </script>
