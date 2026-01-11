@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+
+<!-- 🔥 ESSENCIAL PARA MOBILE (SEM ISSO FICA PEQUENO) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agenda do Barbeiro</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #43cea2, #185a9d);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px; /* 🔥 evita colar nas bordas no celular */
+}
+
+.container {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 22px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+}
+
+h1 {
+  text-align: center;
+  color: #1e2a38;
+  margin-bottom: 8px;
+}
+
+.data-atual {
+  text-align: center;
+  font-weight: bold;
+  color: #1abc9c;
+  margin-bottom: 15px;
+}
+
+input[type="date"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px solid #ddd;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.agendamento {
+  background: linear-gradient(135deg, #f7f9fb, #eef3f7);
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+  border-left: 6px solid #1abc9c;
+}
+
+.hora {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1e2a38;
+}
+
+.cliente {
+  font-size: 15px;
+  margin-top: 5px;
+  color: #555;
+}
+
+.servicos {
+  font-size: 14px;
+  margin-top: 6px;
+  color: #555;
+}
+
+.total {
+  margin-top: 6px;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+p {
+  text-align: center;
+  color: #555;
+}
+
+/* ===== AJUSTE FINO MOBILE ===== */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 22px;
+  }
+
+  .hora {
+    font-size: 16px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Agenda do Barbeiro</h1>
+
+  <div class="data-atual" id="dataTexto"></div>
+
+  <input type="date" id="data">
+
+  <div id="lista"></div>
+</div>
+
+<script>
+const dataInput = document.getElementById("data");
+const lista = document.getElementById("lista");
+const dataTexto = document.getElementById("dataTexto");
+
+/* Define data inicial válida (não domingo nem segunda) */
+let hoje = new Date();
+while (hoje.getDay() === 0 || hoje.getDay() === 1) {
+  hoje.setDate(hoje.getDate() + 1);
+}
+
+dataInput.value = hoje.toISOString().split("T")[0];
+carregarAgenda();
+
+dataInput.addEventListener("change", carregarAgenda);
+
+function carregarAgenda(){
+  lista.innerHTML = "";
+
+  const dataSelecionada = new Date(dataInput.value + "T00:00");
+  const diaSemana = dataSelecionada.getDay();
+
+  dataTexto.innerText =
+    "Data: " + dataInput.value.split("-").reverse().join("/");
+
+  if(diaSemana === 0 || diaSemana === 1){
+    lista.innerHTML = "<p>Barbearia fechada neste dia</p>";
+    return;
+  }
+
+  const agendamentos =
+    JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+  const doDia = agendamentos.filter(a => a.data === dataInput.value);
+
+  if(doDia.length === 0){
+    lista.innerHTML = "<p>Nenhum agendamento para este dia</p>";
+    return;
+  }
+
+  doDia.forEach(a => {
+    const horaMarcada = a.hora || a.horario;
+
+    const div = document.createElement("div");
+    div.className = "agendamento";
+    div.innerHTML = `
+      <div class="hora">⏰ ${horaMarcada}</div>
+      <div class="cliente">👤 Cliente: ${a.nome}</div>
+      <div class="servicos">✂️ Serviços: ${a.servicos.join(", ")}</div>
+      <div class="total">💰 Total: R$ ${a.total}</div>
+      <button onclick="excluirAgendamento('${a.data}','${horaMarcada}')">
+        Excluir Agendamento
+      </button>
+    `;
+    lista.appendChild(div);
+  });
+}
+
+/* 🔥 EXCLUSÃO REAL E DEFINITIVA */
+function excluirAgendamento(data, hora){
+  if(!confirm("Tem certeza que deseja excluir este agendamento?")) return;
+
+  let agendamentos =
+    JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+  agendamentos = agendamentos.filter(a =>
+    !(a.data === data && (a.hora === hora || a.horario === hora))
+  );
+
+  localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+
+  carregarAgenda();
+}
+</script>
+
+</body>
+</html>
