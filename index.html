@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Agendamento Barbearia</title>
+
+<style>
+/* ===== RESET BÁSICO ===== */
+* {
+  box-sizing: border-box;
+}
+
+/* ===== FUNDO MODERNO (SEM PRETO) ===== */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== CARD PRINCIPAL ===== */
+.container {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  padding: 30px 28px;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: fadeIn 0.6s ease;
+}
+
+/* ===== ANIMAÇÃO ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== TÍTULO ===== */
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #2d3436;
+}
+
+/* ===== LABELS ===== */
+label {
+  display: block;
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #636e72;
+}
+
+/* ===== INPUTS ===== */
+input[type="text"],
+input[type="date"],
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #dfe6e9;
+  margin-top: 6px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 3px rgba(108,92,231,0.15);
+}
+
+/* ===== SERVIÇOS ===== */
+.servico {
+  background: #f7f9fc;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  border: 1px solid #ecf0f1;
+}
+
+.servico:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.servico label {
+  margin: 0;
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.servico span {
+  font-weight: bold;
+  color: #6c5ce7;
+}
+
+/* ===== CHECKBOX ===== */
+input[type="checkbox"] {
+  accent-color: #6c5ce7;
+  margin-right: 8px;
+}
+
+/* ===== TOTAL ===== */
+.total {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #00b894;
+  text-align: right;
+}
+
+/* ===== HORÁRIOS ===== */
+.horarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+}
+
+/* ===== BOTÕES DE HORÁRIO ===== */
+.horario {
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.livre {
+  background: linear-gradient(135deg, #55efc4, #00b894);
+  color: #ffffff;
+}
+
+.livre:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,184,148,0.4);
+}
+
+.ocupado {
+  background: linear-gradient(135deg, #ff7675, #d63031);
+  color: #ffffff;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.selecionado {
+  background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+  color: #2d3436;
+  box-shadow: 0 8px 20px rgba(253,203,110,0.5);
+}
+
+/* ===== BOTÃO AGENDAR ===== */
+button {
+  width: 100%;
+  margin-top: 28px;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6c5ce7, #5a4bcf);
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(108,92,231,0.45);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>BARBEARIA NOVAKOSKI</h1>
+
+<label>Nome</label>
+<input id="nome">
+
+<label>Serviços</label>
+
+<div class="servico">
+<label><input type="checkbox" data-preco="30" value="Corte"> Corte</label>
+<span>R$30</span>
+</div>
+
+<div class="servico">
+<label><input type="checkbox" data-preco="80" value="Luzes"> Luzes</label>
+<span>R$80</span>
+</div>
+
+<div class="servico">
+<label><input type="checkbox" data-preco="15" value="Pezinho"> Pezinho</label>
+<span>R$15</span>
+</div>
+
+<div class="servico">
+<label><input type="checkbox" data-preco="40" value="Pigmentação"> Pigmentação</label>
+<span>R$40</span>
+</div>
+
+<div class="servico">
+<label><input type="checkbox" data-preco="20" value="Sobrancelha"> Sobrancelha</label>
+<span>R$20</span>
+</div>
+
+<div class="total" id="total">Total: R$0</div>
+
+<label>Data</label>
+<input type="date" id="data">
+
+<label>Horário</label>
+<div class="horarios" id="horarios"></div>
+
+<button onclick="agendar()">Agendar</button>
+</div>
+
+<script>
+const horariosFixos = ["09:00","10:00","11:00","14:00","15:00","16:00"];
+let horarioSelecionado = null;
+
+document.querySelectorAll("input[type=checkbox]").forEach(c => c.onchange = calcular);
+document.getElementById("data").onchange = validarDia;
+
+function calcular(){
+  let total = 0;
+  document.querySelectorAll("input[type=checkbox]").forEach(c=>{
+    if(c.checked) total += Number(c.dataset.preco);
+  });
+  document.getElementById("total").innerText = "Total: R$" + total;
+}
+
+/* 🔒 BLOQUEIO DOMINGO (0) E SEGUNDA (1) */
+function validarDia(){
+  const dataInput = document.getElementById("data");
+  const data = new Date(dataInput.value + "T00:00");
+  const diaSemana = data.getDay();
+
+  if(diaSemana === 0 || diaSemana === 1){
+    alert("Barbearia não funciona domingo e segunda-feira.");
+    dataInput.value = "";
+    document.getElementById("horarios").innerHTML = "";
+    return;
+  }
+
+  carregarHorarios();
+}
+
+function carregarHorarios(){
+  const div = document.getElementById("horarios");
+  div.innerHTML = "";
+  horarioSelecionado = null;
+
+  const data = document.getElementById("data").value;
+  const ag = JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+  horariosFixos.forEach(h=>{
+    const ocupado = ag.some(a=>a.data===data && a.hora===h);
+    const b = document.createElement("button");
+    b.innerText = h;
+    b.className = "horario " + (ocupado ? "ocupado" : "livre");
+    if(!ocupado){
+      b.onclick = ()=>selecionar(b,h);
+    }
+    div.appendChild(b);
+  });
+}
+
+function selecionar(botao,h){
+  document.querySelectorAll(".horario").forEach(b=>b.classList.remove("selecionado"));
+  botao.classList.add("selecionado");
+  horarioSelecionado = h;
+}
+
+function agendar(){
+  const nome = document.getElementById("nome").value;
+  const data = document.getElementById("data").value;
+
+  const servicos = [];
+  let total = 0;
+
+  document.querySelectorAll("input[type=checkbox]").forEach(c=>{
+    if(c.checked){
+      servicos.push(c.value);
+      total += Number(c.dataset.preco);
+    }
+  });
+
+  if(!nome || !data || !horarioSelecionado || servicos.length===0){
+    alert("Preencha tudo");
+    return;
+  }
+
+  const confirmar = confirm(
+    "⚠️ Atenção!\n\nAo confirmar, seu horário será registrado no sistema.\n\nDeseja realmente confirmar o agendamento ? Caso deseje cancelar ou reagendar o horário, entre em contato com a barbearia novakoski pelo WhatsApp"
+  );
+
+  if(!confirmar){
+    const msg = `Olá, o cliente ${nome} cancelou o agendamento de ${data} às ${horarioSelecionado}. Caso deseje cancelar ou reagendar o horário, entre em contato com o barbeiro pelo WhatsApp.`;
+    const telefoneBarbeiro = "5599999999999";
+    window.open(`https://wa.me/${telefoneBarbeiro}?text=${encodeURIComponent(msg)}`);
+    return;
+  }
+
+  const ag = JSON.parse(localStorage.getItem("agendamentos")) || [];
+  ag.push({nome,servicos,total,data,hora:horarioSelecionado});
+  localStorage.setItem("agendamentos",JSON.stringify(ag));
+
+  alert("Agendado com sucesso");
+  carregarHorarios();
+}
+</script>
+
+</body>
+</html>
